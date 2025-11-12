@@ -59,7 +59,7 @@ function draw() {
   my += (targetMy - my) * 0.05; // 更平缓
 
   // 蓝色区域背景
-  fill("#D1E7F2");
+  fill("#00b1f0");
   rect(100, 100, width - 100, height - 100);
 
   // 柱子绘制
