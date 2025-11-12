@@ -40,7 +40,7 @@ function setup() {
 }
 
 function draw() {
-  background("#D1E7F2");
+  background("#00b1f0");
   for (let btn of gridButtons) {
     btn.display();
   }
