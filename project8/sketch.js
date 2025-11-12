@@ -11,8 +11,8 @@ function preload() {
 }
 
 function setup() {
-  let cnv = createCanvas(700, 500);
-  cnv.parent("canvas-container");
+  let canvas = createCanvas(700, 500);
+  canvas.parent("canvas-container");
   video = createCapture(VIDEO);
   video.size(640, 480);
   video.hide();
