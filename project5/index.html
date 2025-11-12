@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Customized TITAN</title>
 
+  <!-- p5.js + dom library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.dom.min.js"></script>
 
@@ -29,10 +30,14 @@
       margin: 20px 0;
     }
 
+    /* ✅ 横向滑块容器 */
     #slider-holder {
-      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       width: 600px;
-      text-align: center;
+      margin-top: 16px;
+      margin-bottom: 32px;
     }
 
     header {
@@ -67,20 +72,20 @@
       justify-content: space-between;
       align-items: center;
       margin: 40px 0 60px;
-      max-width: 800px; 
-      padding: 0 0px;    
+      max-width: 800px;
+      padding: 0;
       width: 100%;
     }
-    
+
     .footer-left {
       flex-shrink: 0;
     }
-    
+
     .footer-right {
       display: flex;
-      gap: 8px; /* 控制左右按钮间的距离 */
+      gap: 8px;
     }
-    
+
     .nav-button {
       display: inline-block;
       padding: 10px 20px;
@@ -92,11 +97,11 @@
       transition: background-color 0.2s ease;
       white-space: nowrap;
     }
-    
+
     .nav-button:hover {
       background-color: #333;
     }
-    
+
     .nav-button.placeholder {
       background: transparent;
       pointer-events: none;
@@ -107,7 +112,7 @@
       font-size: 16px;
       color: #aaa;
       text-align: center;
-      padding:  10px 0;
+      padding: 10px 0;
       max-width: 800px;
       width: 100%;
     }
@@ -119,10 +124,12 @@
     <h1>Customized TITAN</h1>
   </header>
 
+  <!-- ✅ Canvas 包装器 -->
   <div id="canvas-wrapper">
     <div id="canvas-container"></div>
   </div>
 
+  <!-- ✅ 三个滑块的横向容器 -->
   <div id="slider-holder"></div>
 
   <footer>
@@ -131,27 +138,27 @@
 
     <h2>Description</h2>
     <p>Rather than presenting TITAN as a static entity, the work emphasizes TITAN’s adaptability: users can choose between three distinct coaching styles—Short Coach, Agentic Coach, and Extensive Coach—each offering a different tone and degree of guidance. This customization reflects the larger design proposition: users should retain epistemic agency in how they engage with intelligent systems.</p>
-    
 
     <h2>Design Intention</h2>
     <p>This piece plays with the idea that “seeing clearly” takes effort. Instead of revealing TITAN all at once, users have to slowly uncover it by adjusting light-like filters—just like how we often need to look closer to understand what information really means.</p>
     <p>The three slider controls act like tools for tuning your attention: sharpening the image, softening distractions, or shifting perspective. At the same time, letting users pick from different coaching styles shows that there isn’t just one way to get support—whether you prefer quick hints, detailed guidance, or something in between, you stay in charge.</p>
+
     <div class="footer-nav-three">
       <div class="footer-left">
-      <a href="../index.html" class="nav-button">Back to Gallery</a>
-    </div>
+        <a href="../index.html" class="nav-button">Back to Gallery</a>
+      </div>
       <div class="footer-right">
-    <a href="../project5/index.html" class="nav-button">←</a>
-    <a href="../project2/index.html" class="nav-button">→</a>
-  </div>
-</div>
-        <!-- Copyright 信息 -->
+        <a href="../project5/index.html" class="nav-button">←</a>
+        <a href="../project2/index.html" class="nav-button">→</a>
+      </div>
+    </div>
+
     <div class="copyright">
       © Longyue Qin 2025
     </div>
-</footer>
+  </footer>
 
-  <!-- ✅ 加载你的 sketch.js -->
+  <!-- ✅ 加载 sketch.js 脚本 -->
   <script src="sketch.js"></script>
 </body>
 </html>
