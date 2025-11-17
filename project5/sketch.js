@@ -1,8 +1,8 @@
 let img;
-let slider;       
-let blurSlider;    
-let colorSlider;  
-let pg;            
+let slider;         // Aperture radius
+let blurSlider;     // Blur width
+let zoomSlider;     // Zoom (was color offset)
+let pg;             // Graphics layer
 let pixelFont;
 
 function preload() {
@@ -28,29 +28,22 @@ function setup() {
   blurSlider.style("display", "inline-block");
   blurSlider.style("margin-right", "10px");
 
-  colorSlider = createSlider(0, 255, 255);
-  colorSlider.position(390, height + 10);
-  colorSlider.style("width", "180px");
-  colorSlider.style("display", "inline-block");
+  zoomSlider = createSlider(1, 4, 2, 0.1); 
+  zoomSlider.position(390, height + 10);
+  zoomSlider.style("width", "180px");
+  zoomSlider.style("display", "inline-block");
 }
 
 function draw() {
-
   image(img, 0, 0);
 
-
   pg.clear();
-  pg.background(0); 
+  pg.background(0);
 
   let ctx = pg.drawingContext;
   let radius = slider.value();
   let blurWidth = blurSlider.value();
-  let colorOffset = colorSlider.value();
-
-  // 颜色映射：蓝→中性→红
-  let r = map(colorOffset, 0, 255, 0, 255);
-  let g = map(colorOffset, 0, 255, 0, 100);
-  let b = map(colorOffset, 0, 255, 255, 0);
+  let zoom = zoomSlider.value();
 
   let innerRadius = max(0, radius - blurWidth);
   let outerRadius = radius;
@@ -66,27 +59,29 @@ function draw() {
   ctx.fill();
   ctx.restore();
 
+  let zoomSize = radius * 2;
+  let sx = constrain(mouseX - radius / zoom, 0, img.width - zoomSize / zoom);
+  let sy = constrain(mouseY - radius / zoom, 0, img.height - zoomSize / zoom);
 
-  ctx.save();
-  ctx.globalCompositeOperation = 'lighter';
-  let colorGradient = ctx.createRadialGradient(mouseX, mouseY, innerRadius, mouseX, mouseY, outerRadius);
-  colorGradient.addColorStop(0, `rgba(${r},${g},${b}, 0.5)`);
-  colorGradient.addColorStop(1, `rgba(${r},${g},${b}, 0)`);
-  ctx.fillStyle = colorGradient;
-  ctx.beginPath();
-  ctx.arc(mouseX, mouseY, outerRadius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
+  pg.image(
+    img,
+    mouseX - radius,
+    mouseY - radius,
+    zoomSize,
+    zoomSize,
+    sx,
+    sy,
+    zoomSize / zoom,
+    zoomSize / zoom
+  );
 
   image(pg, 0, 0);
 
-  // ---文字 ---
   fill(255);
   textSize(14);
   textFont(pixelFont);
   textAlign(LEFT, CENTER);
   text(`Aperture radius: ${radius}px`, 10, height - 30);
   text(`Blurred edges: ${blurWidth}px`, 200, height - 30);
-  text(`Color offset: ${colorSlider.value()}`, 390, height - 30);
+  text(`Zoom: ${zoom.toFixed(1)}x`, 390, height - 30);
 }
