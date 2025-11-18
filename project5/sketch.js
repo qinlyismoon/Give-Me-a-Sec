@@ -1,8 +1,8 @@
 let img;
-let slider;
-let blurSlider;
-let zoomSlider;
-let pg;
+let slider;       
+let blurSlider;    
+let colorSlider;  
+let pg;            
 let pixelFont;
 
 function preload() {
@@ -19,70 +19,71 @@ function setup() {
   slider = createSlider(50, 300, 150);
   slider.position(10, height + 10);
   slider.style("width", "180px");
+  slider.style("display", "inline-block");
+  slider.style("margin-right", "10px");
 
   blurSlider = createSlider(0, 150, 50);
   blurSlider.position(200, height + 10);
   blurSlider.style("width", "180px");
+  blurSlider.style("display", "inline-block");
+  blurSlider.style("margin-right", "10px");
 
-  zoomSlider = createSlider(1, 4, 2, 0.1);
-  zoomSlider.position(390, height + 10);
-  zoomSlider.style("width", "180px");
+  colorSlider = createSlider(0, 255, 255);
+  colorSlider.position(390, height + 10);
+  colorSlider.style("width", "180px");
+  colorSlider.style("display", "inline-block");
 }
 
 function draw() {
-  background(0);  // 🔥 整体变为黑色背景
+
+  image(img, 0, 0);
 
   pg.clear();
-
-  let radius = slider.value();
-  let blurWidth = blurSlider.value();
-  let zoom = zoomSlider.value();
-  let zoomSize = radius * 2;
-
-  let sx = constrain(mouseX - radius / zoom, 0, img.width - zoomSize / zoom);
-  let sy = constrain(mouseY - radius / zoom, 0, img.height - zoomSize / zoom);
+  pg.background(0); 
 
   let ctx = pg.drawingContext;
+  let radius = slider.value();
+  let blurWidth = blurSlider.value();
+  let colorOffset = colorSlider.value();
 
+  // 颜色映射：蓝→中性→红
+  let r = map(colorOffset, 0, 255, 0, 255);
+  let g = map(colorOffset, 0, 255, 0, 100);
+  let b = map(colorOffset, 0, 255, 255, 0);
 
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(mouseX, mouseY, radius, 0, Math.PI * 2);
-  ctx.clip();
-
-
-  ctx.drawImage(
-    img.canvas,
-    sx, sy,
-    zoomSize / zoom, zoomSize / zoom,
-    mouseX - radius, mouseY - radius,
-    zoomSize, zoomSize
-  );
-  ctx.restore();
-
-
-  ctx.save();
   let innerRadius = max(0, radius - blurWidth);
   let outerRadius = radius;
 
-  let glowGradient = ctx.createRadialGradient(mouseX, mouseY, innerRadius, mouseX, mouseY, outerRadius);
-  glowGradient.addColorStop(0, 'rgba(255,255,255,0.0)');
-  glowGradient.addColorStop(0.7, 'rgba(255,255,255,0.15)');
-  glowGradient.addColorStop(1, 'rgba(255,255,255,0.5)');
-  ctx.fillStyle = glowGradient;
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  let eraseGradient = ctx.createRadialGradient(mouseX, mouseY, innerRadius, mouseX, mouseY, outerRadius);
+  eraseGradient.addColorStop(0, 'rgba(0,0,0,1)');
+  eraseGradient.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = eraseGradient;
   ctx.beginPath();
-  ctx.arc(mouseX, mouseY, radius, 0, Math.PI * 2);
+  ctx.arc(mouseX, mouseY, outerRadius, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
-  image(pg, 0, 0); 
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  let colorGradient = ctx.createRadialGradient(mouseX, mouseY, innerRadius, mouseX, mouseY, outerRadius);
+  colorGradient.addColorStop(0, rgba(${r},${g},${b}, 0.5));
+  colorGradient.addColorStop(1, rgba(${r},${g},${b}, 0));
+  ctx.fillStyle = colorGradient;
+  ctx.beginPath();
+  ctx.arc(mouseX, mouseY, outerRadius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 
-  // === 滑块说明文字 ===
+  image(pg, 0, 0);
+
+  // ---文字 ---
   fill(255);
   textSize(14);
   textFont(pixelFont);
   textAlign(LEFT, CENTER);
-  text(`Aperture radius: ${radius}px`, 10, height - 30);
-  text(`Blurred edges: ${blurWidth}px`, 200, height - 30);
-  text(`Zoom: ${zoom.toFixed(1)}x`, 390, height - 30);
+  text(Aperture radius: ${radius}px, 10, height - 30);
+  text(Blurred edges: ${blurWidth}px, 200, height - 30);
+  text(Color offset: ${colorSlider.value()}, 390, height - 30);
 }
