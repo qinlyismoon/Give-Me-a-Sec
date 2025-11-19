@@ -35,7 +35,6 @@ function setup() {
 
     let disX = infoX - disWidth - 10;
 
-    // 创建灰色遮罩层
     let pg = createGraphics(diskWidth, diskHeight);
     pg.background(180);
     pg.noStroke();
